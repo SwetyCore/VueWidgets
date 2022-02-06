@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Adobe Photoshop 2020",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Adobe Photoshop 2020.lnk",
+    "icon": "appicons/Adobe Photoshop 2020.png"
+  },
+  {
+    "name": "Adobe Premiere Pro 2020",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Adobe Premiere Pro 2020.lnk",
+    "icon": "appicons/Adobe Premiere Pro 2020.png"
+  },
+  {
+    "name": "DGP.Genshin.exe",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\DGP.Genshin.exe.lnk",
+    "icon": "appicons/DGP.Genshin.exe.png"
+  },
+  {
+    "name": "draw.io",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\draw.io.lnk",
+    "icon": "appicons/draw.io.png"
+  },
+  {
+    "name": "Excel",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Excel.lnk",
+    "icon": "appicons/Excel.png"
+  },
+  {
+    "name": "LoadGameDisk",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\LoadGameDisk.lnk",
+    "icon": "appicons/LoadGameDisk.png"
+  },
+  {
+    "name": "Microsoft Edge",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Microsoft Edge.lnk",
+    "icon": "appicons/Microsoft Edge.png"
+  },
+  {
+    "name": "OneNote",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\OneNote.lnk",
+    "icon": "appicons/OneNote.png"
+  },
+  {
+    "name": "Outlook",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Outlook.lnk",
+    "icon": "appicons/Outlook.png"
+  },
+  {
+    "name": "PowerPoint",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\PowerPoint.lnk",
+    "icon": "appicons/PowerPoint.png"
+  },
+  {
+    "name": "PyCharm Community Edition 2021.3.1",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\PyCharm Community Edition 2021.3.1.lnk",
+    "icon": "appicons/PyCharm Community Edition 2021.3.1.png"
+  },
+  {
+    "name": "Quartus (Quartus Prime 17.1)",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Quartus (Quartus Prime 17.1).lnk",
+    "icon": "appicons/Quartus (Quartus Prime 17.1).png"
+  },
+  {
+    "name": "Tabby Terminal",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Tabby Terminal.lnk",
+    "icon": "appicons/Tabby Terminal.png"
+  },
+  {
+    "name": "Thunder",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Thunder.lnk",
+    "icon": "appicons/Thunder.png"
+  },
+  {
+    "name": "TIM",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\TIM.lnk",
+    "icon": "appicons/TIM.png"
+  },
+  {
+    "name": "Visual Studio Code",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\Visual Studio Code.lnk",
+    "icon": "appicons/Visual Studio Code.png"
+  },
+  {
+    "name": "原神",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\原神.lnk",
+    "icon": "appicons/原神.png"
+  },
+  {
+    "name": "天翼云盘",
+    "path": "C:\\Users\\SwetyCore\\Desktop\\天翼云盘.lnk",
+    "icon": "appicons/天翼云盘.png"
+  },
+  {
+    "name": "Steam",
+    "path": "C:\\Users\\Public\\Desktop\\Steam.lnk",
+    "icon": "appicons/Steam.png"
+  },
+  {
+    "name": "网易UU加速器",
+    "path": "C:\\Users\\Public\\Desktop\\网易UU加速器.lnk",
+    "icon": "appicons/网易UU加速器.png"
+  }
+]
