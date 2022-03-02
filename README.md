@@ -1,4 +1,9 @@
-# vuewidgets
+# VueWidgets
+
+<small>*这个readme并不完整，等待完善ing</small>
+### 此项目为[SwetyCore/MyWidget](https://github.com/SwetyCore/MyWidget)的一部分。
+
+
 
 ## Project setup
 ```
