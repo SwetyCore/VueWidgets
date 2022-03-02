@@ -1,0 +1,92 @@
+[
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 1,
+        "i": "music-player",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "countdown",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 2,
+        "i": "todo",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 1,
+        "i": "weather",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "clock",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 1,
+        "i": "calendar",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "live-resin",
+        "enable":true,
+        "color":"#f1ebe5",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "power-control",
+        "enable":true,
+        "color":"white",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 1,
+        "i": "PerformanceMonitor",
+        "enable":true,
+        "color":"#222222",
+        "img":""
+    }
+]

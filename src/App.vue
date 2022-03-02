@@ -1,118 +1,249 @@
 <template>
-  <div id="app">
-    <div class="widget-container">
-      <widget-card
-        :size="min"
-        :cardbg="dd.bg"
-        v-for="dd in deadlines"
-        :key="dd"
-        :bgcolor="dd.bgcolor"
+  <v-app>
+    <!-- 卡片 -->
+    <div v-if="activeWidgets.length != 0">
+      <grid-layout
+        :layout.sync="layout"
+        :col-num="3"
+        :row-height="180"
+        :is-draggable="true"
+        :is-resizable="false"
+        :is-mirrored="false"
+        :vertical-compact="true"
+        :margin="[10, 10]"
+        :use-css-transforms="true"
+        style="width: 100%"
       >
-        <countdown
-          :target="dd.target"
-          :name="dd.name"
-          :cl_title="dd.colors[0]"
-          :cl_num="dd.colors[1]"
-          :cl_target="dd.colors[2]"
-        ></countdown>
-      </widget-card>
+        <grid-item
+          v-for="(item, index) in activeWidgets"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.i"
+          :key="item.i"
+          @moved="movedEvent"
+          :dragIgnoreFrom="'.drag-ignore'"
+        >
+          <v-card
+            height="100%"
+            @click.right="show($event, index)"
+            :color="item.color"
+            :img="item.img"
+            style="border-radius: 10px"
+          >
+            <v-container class="d-flex justify-center align-center"
+              ><component :is="item.i"></component></v-container
+          ></v-card>
+        </grid-item>
+      </grid-layout>
 
-      <widget-card :size="mid">
-        <music-player></music-player>
-      </widget-card>
+      <!-- 卡片右键菜单 -->
+      <v-menu
+        v-model="cardMenu"
+        :position-x="x"
+        :position-y="y"
+        absolute
+        offset-y
+      >
+        <v-list>
+          <v-list-item @click="cardStyleDialog = true">
+            <v-list-item-title
+              ><v-icon>mdi-brush</v-icon>编辑样式</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
-      <widget-card :size="mid"><calendar></calendar></widget-card>
-      <widget-card
-        :size="min"
-        :cardbg="'url(imgs/clockbg.png)'"
-        :bgcolor="'rgb(0, 122, 204)'"
-        ><clock></clock
-      ></widget-card>
+      <!-- 样式编辑 -->
+      <v-dialog v-model="cardStyleDialog" max-width="390">
+        <v-card>
+          <v-card-title class="headline"
+            >{{ activeWidgets[selectedCard].i }} 部件 背景样式编辑</v-card-title
+          >
 
-      <widget-card :size="max" :bgcolor="'#f5f8fd'"
-        ><class-schedule></class-schedule
-      ></widget-card>
-      <widget-card :size="min" :bgcolor="'#f5f8fd'">
-        <live-resin></live-resin>
-      </widget-card>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                背景颜色
+                <v-col class="d-flex justify-center">
+                  <v-color-picker v-model="cardColor"></v-color-picker>
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-sheet dark class="pa-4">
+                    <pre>{{ cardColor }}</pre>
+                  </v-sheet>
+                </v-col>
+                <v-text-field
+                  v-model="cardImg"
+                  label="
+              背景图片,支持网络地址"
+                ></v-text-field>
+              </v-row>
+            </v-container>
+          </v-card-text>
 
-      <widget-card :size="min" :bgcolor="'#f5f5f5'"
-        ><power-control></power-control
-      ></widget-card>
-      <widget-card :size="max"><todo></todo></widget-card>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-      <widget-card :size="'mid'"><weather></weather></widget-card>
+            <v-btn color="green darken-1" text @click="saveStyle"> 关闭 </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
 
-    <div class="version" style="" @click="Refresh">
-      Develop version build 2701
+    <!-- 设置页面及按钮 -->
+    <div class="float-setting">
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialog"
+          fullscreen
+          hide-overlay
+          transition="dialog-bottom-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn fab dark small color="primary" v-bind="attrs" v-on="on"
+              ><v-icon> mdi-cog </v-icon></v-btn
+            >
+          </template>
+          <v-card outlined>
+            <v-toolbar dark color="primary">
+              <v-btn icon dark @click="dialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+              <v-toolbar-title>设置</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn dark text @click="reload"> 应用并刷新 </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+            <settings />
+          </v-card>
+        </v-dialog>
+      </v-row>
     </div>
-  </div>
+  </v-app>
 </template>
-<script>
-// import AppIconItem from "./components/AppIconItem.vue";
-import WidgetCard from "./components/WidgetCard.vue";
-// 自定义组件
 
+<script>
+import VueGridLayout from "vue-grid-layout";
+import axios from "axios";
+import Settings from "./components/Settings.vue";
 export default {
-  publicPath: "./assets",
   name: "App",
+
   components: {
-    // AppIconItem,
-    WidgetCard,
-    // calendar,
-    // weather,Clock,countdown,
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem,
+    Settings,
   },
-  data: function () {
-    return {
-      min: "min",
-      max: "max",
-      mid: "mid",
-      app_list: [],
-      deadlines: [
-        {
-          name: "开学",
-          target: "2022-2-18",
-          colors: [],
-        },
-        {
-          name: "春节",
-          target: "2022-2-1",
-          colors: ["gold", "gold", "gold"],
-          bgcolor: "#CC081A",
-        },
-      ],
-    };
+
+  data: () => ({
+    dialog: false,
+    layout: [],
+    cardMenu: false,
+    x: 0,
+    y: 0,
+    selectedCard: 0,
+    cardStyleDialog: false,
+    cardColor: "",
+    cardImg: "",
+    //
+  }),
+  mounted() {
+    // debugger
+    var layout = JSON.parse(localStorage.getItem("layout"));
+    axios.get("data/layout.json").then((res) => {
+      this.layout = layout == null ? res.data : layout;
+      // this.layout = res.data;
+    });
+  },
+  created() {
+    var layout = JSON.parse(localStorage.getItem("layout"));
+    console.log(layout);
   },
   methods: {
-    Refresh: function () {
+    movedEvent: function (i, newX, newY) {
+      console.log(this.activeWidgets);
+      localStorage.setItem("layout", JSON.stringify(this.activeWidgets));
+      console.log("MOVE i=" + i + ", X=" + newX + ", Y=" + newY);
+    },
+    reload() {
       window.location.reload();
     },
-    Exit: function () {
-      var data = {
-        method: "exit",
-      };
-      window.chrome.webview.postMessage(JSON.stringify(data));
+    show(e, item) {
+      e.preventDefault();
+      this.selectedCard = item;
+      this.cardMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY + document.getElementById("app").scrollTop;
+      this.$nextTick(() => {
+        this.cardMenu = true;
+
+        this.cardColor = this.activeWidgets[item].color;
+        this.cardImg = this.activeWidgets[item].img;
+      });
+    },
+    saveStyle() {
+      this.layout.forEach((item, index) => {
+        if (item.i == this.activeWidgets[this.selectedCard].i) {
+          // alert(index)
+          this.layout[index].color = this.cardColor;
+          this.layout[index].img = this.cardImg;
+        }
+      });
+
+      localStorage.setItem("layout", JSON.stringify(this.activeWidgets));
+      this.cardStyleDialog = false;
+      this.cardColor = "";
+      this.cardImg = "";
+
+      // this.activeWidgets[this.selectedCard].color=this.cardColor;
+      // this.activeWidgets[this.selectedCard].img=this.cardImg;
     },
   },
-  mounted: function () {},
+  computed: {
+    activeWidgets: function () {
+      return this.layout.filter(function (layout) {
+        return layout.enable;
+      });
+    },
+  },
 };
 </script>
 
 <style>
-body::-webkit-scrollbar {
-  width: 15px;
-  height: 8px;
+.float-setting {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
 }
-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.158);
+html {
   border-radius: 10px;
-  -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.274);
 }
-body::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.4);
+#app {
+  background-color: rgba(255, 255, 255, 0.178);
+  overflow-x: hidden;
+  margin: 5px;
+  border-radius: 10px;
+  overflow-y: auto;
+  height: 99vh;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 5%), 0 2px 4px 1px rgb(0 0 0 / 9%);
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(138, 138, 138, 0.096);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(32, 32, 32, 0.075);
+  border-radius: 10px;
+  -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.164);
+}
+/* *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.842);
   -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
-}
+} */
 
 * {
   -moz-user-select: -moz-none;
@@ -124,79 +255,4 @@ body::-webkit-scrollbar-thumb:hover {
   user-select: none;
   margin: 0px;
 }
-:root {
-  --widget-margin: 15px;
-  --icon-size: 56px;
-  --icon-gap-x: 35px;
-  --icon-gap-y: 35px;
-  --icon-border-radius: 15px;
-}
-
-html {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.096);
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #1a2c3f;
-
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-left: 30px;
-}
-.version {
-  position: fixed;
-  color: white;
-  right: 10px;
-  bottom: 10px;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.267);
-}
-
-.widget-container {
-  width: 100%;
-  /* height: 1080px; */
-  grid-template-columns: repeat(
-    auto-fill,
-    calc(var(--icon-size) + var(--icon-gap-y))
-  );
-  grid-template-rows: repeat(
-    auto-fill,
-    calc(var(--icon-size) + var(--icon-gap-x))
-  );
-  grid-auto-flow: dense;
-  box-sizing: border-box;
-  justify-content: space-between;
-  /* overflow-y: auto; */
-  /* display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-start; */
-  display: grid;
-
-  justify-content: right;
-}
-.formium-app-activated {
-  /* animation: fadenum 0.4s; */
-}
-/* .formium-app-deactivate{
-  display: none;
-} */
-
-@keyframes fadenum {
-  0% {
-    opacity: 0;
-  }
-}
-</style>
-<style lang="css">
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
 </style>

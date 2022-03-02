@@ -1,96 +1,168 @@
 <template>
-  <div>
-    <div style="display: flex; justify-content: space-between">
-      <div class="cardtitle">待办</div>
-      <div style="font-size: 20px; cursor: pointer; display: flex">
-        <div class="iconbtn" @click="edittodo" title="添加">
-          <i class="mdi mdi-plus"></i>
-        </div>
-        <div class="iconbtn" @click="handleClear" title="清除已完成项目">
-          <i class="mdi mdi-delete-sweep-outline"></i>
-        </div>
-      </div>
-    </div>
-    <div style="overflow: auto; height: 300px">
-      <div
-        style="display: flex"
-        class="todo-item"
-        v-for="(item, index) in filterData"
-        :key="index"
-        @click="edittodo(item.id)"
+  <div style="width: 100%">
+    <h3>
+      待办
+      <v-chip
+        class="mr-2"
+        :input-value="filter == 'all'"
+        filter
+        filter-icon="mdi-label"
+        @click="filter = 'all'"
+        small
       >
-        <div class="todo-check-buttom" style="" @click.stop="donetodo(item.id)">
-          <i v-if="item.completed" class="mdi mdi-checkbox-marked-outline"></i>
-          <i v-else class="mdi mdi-checkbox-blank-outline"></i>
-        </div>
-        <div
-          style="margin-left: 5px; text-align: center; width: 100%"
-          v-if="!item.completed"
-        >
-          <div class="todo-title">{{ item.text }}</div>
-          <div class="todo-tip">{{ item.deadline }} {{ item.deadtime }}</div>
-        </div>
-        <div
-          style="
-            margin-left: 5px;
-            text-align: center;
-            width: 100%;
-            text-decoration: line-through;
-          "
-          v-else
-        >
-          <div class="todo-title">{{ item.text }}</div>
-          <div class="todo-tip">{{ item.deadline }} {{ item.deadtime }}</div>
-        </div>
-        <div
-          class="todo-check-buttom"
-          style=""
-          @click.stop="handleDeleteItem(item.id)"
-        >
-          <i class="mdi mdi-delete"></i>
-        </div>
-      </div>
-    </div>
+        所有待办
+      </v-chip>
+      <v-chip
+        class="mr-2"
+        @click="filter = 'active'"
+        :input-value="filter == 'active'"
+        filter
+        filter-icon="mdi-label"
+        color="orange"
+        small
+        dark
+      >
+        未完成
+      </v-chip>
+      <v-chip
+        @click="filter = 'completed'"
+        :input-value="filter == 'completed'"
+        filter
+        filter-icon="mdi-label"
+        color="green"
+        small
+        dark
+      >
+        已完成
+      </v-chip>
 
-    <mydialog :show="show">
-      <div
-        style="
-          flex-flow: column wrap;
-          justify-content: space-between;
-          display: flex;
-          margin: 20px;
-          align-content: space-around;
-          flex-wrap: wrap;
-          flex-direction: row;
-        "
+      <v-btn small icon @click="edittodo"><v-icon>mdi-plus</v-icon></v-btn>
+      <v-btn small icon @click="handleClear"
+        ><v-icon>mdi-delete-sweep-outline</v-icon></v-btn
       >
-        <div :id="editorId"></div>
-        <input placeholder="日期" type="date" v-model="deadline" />
-        <input type="time" v-model="deadtime" />
-      </div>
-      <div style="display: flex; justify-content: flex-end">
-        <div class="mybtn" @click="show = false">取消</div>
-        <div class="mybtn" style="background-color: green" @click="addTodo">
-          确定
-        </div>
-      </div>
-    </mydialog>
+    </h3>
+    <v-divider></v-divider>
+    <v-list style="background-color: transparent;">
+      <v-virtual-scroll height="280" :items="filterData" item-height="52">
+        <template v-slot="{ item, index }">
+          <v-list-item :key="index" link @click="edittodo(item.id)" dense class="drag-ignore">
+            <v-list-item-icon>
+              <v-btn icon @click.stop="donetodo(item.id)">
+                <v-icon v-if="item.completed"
+                  >mdi-checkbox-marked-outline</v-icon
+                >
+                <v-icon v-else>mdi-checkbox-blank-outline</v-icon>
+              </v-btn>
+            </v-list-item-icon>
+
+            <v-list-item-content
+              :class="item.completed ? 'text-decoration-line-through' : ''"
+            >
+              <v-list-item-title>{{ item.text }}</v-list-item-title>
+              <v-list-item-subtitle
+                >{{ item.deadline }} {{ item.deadtime }}</v-list-item-subtitle
+              >
+            </v-list-item-content>
+            <v-list-item-action
+              ><v-btn icon @click.stop="handleDeleteItem(item.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn></v-list-item-action
+            >
+          </v-list-item>
+        </template>
+      </v-virtual-scroll>
+    </v-list>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      max-width="900px"
+      v-model="dialog"
+    >
+      <v-card>
+        <v-toolbar color="primary" dark>待办编辑</v-toolbar>
+        <v-card-text>
+          <v-container>
+            <div :id="editorId" style="margin-top: 5px"></div>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-menu
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="deadline"
+                      label="选择一个日期"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="deadline"
+                    @input="menu = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="11" sm="5">
+                <v-menu
+                  ref="menu"
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="deadtime"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="deadtime"
+                      label="Picker in menu"
+                      prepend-icon="mdi-clock"
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="menu2"
+                    v-model="deadtime"
+                    full-width
+                    @click:minute="$refs.menu.save(deadtime)"
+                  ></v-time-picker>
+                </v-menu>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn text @click="addTodo">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import mydialog from "../mydialog.vue";
 // 引入富文本编辑器
 import E from "wangeditor";
 
 export default {
-  components: { mydialog },
+  components: {},
   name: "Todo",
   data() {
     return {
+      menu: false,
+      menu2: false,
       editorId: "editor01",
       editor: null,
-      show: false,
+      dialog: false,
       todoData: [],
       content: "",
       deadline: "",
@@ -110,11 +182,26 @@ export default {
     //初始化编辑器
     initEditor() {
       this.$nextTick(function () {
-        let editor = new E("#" + "editor01");
-        this.editor = editor;
-        editor.create(); //开始创建编辑器；
-        if (this.content != undefined) {
-          this.editor.txt.html(this.content);
+        try {
+          let editor = new E("#" + "editor01");
+          this.editor = editor;
+          editor.config.menus = [
+            "head",
+            "link",
+            "list",
+            "todo",
+            "quote",
+            "splitLine",
+            "foreColor",
+          ];
+          editor.create(); //开始创建编辑器；
+          if (this.content != undefined) {
+            this.editor.txt.html(this.content);
+          }
+        } catch {
+          if (this.content != undefined) {
+            this.editor.txt.html(this.content);
+          }
         }
       });
     },
@@ -140,7 +227,7 @@ export default {
       }
       this.content = "";
       this.deadtime = "";
-      this.show = false;
+      this.dialog = false;
       this.index = null;
     },
     edittodo(id) {
@@ -150,8 +237,13 @@ export default {
         this.deadline = this.todoData[index].deadline;
         this.deadtime = this.todoData[index].deadtime;
         this.index = index;
+      } else {
+        this.index = null;
+        this.content = "";
+        this.deadline = "";
+        this.deadtime = "";
       }
-      this.show = true;
+      this.dialog = true;
       this.$nextTick(function () {
         // DOM 更新了
         this.initEditor();
@@ -209,40 +301,4 @@ export default {
 </script>
 
 <style>
-.todo-check-buttom {
-  font-size: 24px;
-  margin-left: 5px;
-  cursor: pointer;
-}
-.todo-check-buttom:active {
-  transform: scale(0.92);
-}
-.todo-title {
-  height: 22px;
-  font-weight: bold;
-  overflow: auto;
-  text-align: left;
-}
-.todo-tip {
-  font-size: small;
-  text-align: left;
-}
-.todo-item {
-  margin: 4px;
-  background-color: white;
-  height: 56px;
-  align-items: center;
-  border-radius: 10px;
-  width: 96%;
-}
-.todo-item:hover {
-  box-shadow: 0 0 5px #0000001a;
-}
-
-.iconbtn {
-  margin-left: 5px;
-}
-.iconbtn:hover {
-  color: gray;
-}
 </style>

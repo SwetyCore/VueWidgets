@@ -1,45 +1,50 @@
 <template>
-  <div class="calendar-container" style="display: flex">
-    <div style="width: 50%; text-align: left">
-      <div style="color: #c92828">
-        周{{ day }} {{ gregorianFestival }}
-        <div style="font-size: 60px; margin-top: 20px; color: black">
-          {{ date }}
+  <div class="widget-card">
+    <div class="calendar-container" style="display: flex">
+      <div style="width: 50%; text-align: left">
+        <div style="color: #c92828">
+          周{{ day }} {{ gregorianFestival }}
+          <div style="font-size: 60px; margin-top: 5px; color: black">
+            {{ date }}
+          </div>
+        </div>
+        <div>
+          {{ Ndate }}<br />
+          {{ lunar }}
         </div>
       </div>
-      <div>
-        {{ Ndate }}<br />
-        {{ lunarYearCn + "年" + lunarMonthCn + lunarDayCn }}
-      </div>
-    </div>
-    <div class="calender_container">
-      <div v-for="week in weeks" :key="week">{{ week }}</div>
-      <div v-for="blank in blankdays" :key="blank">{{ " " }}</div>
-      <div v-for="dayitem in daylist" :key="dayitem" :class="dayitem[1]">
-        {{ dayitem[0] }}
+      <div class="calender_container">
+        <div v-for="week in weeks" :key="week">{{ week }}</div>
+        <div v-for="blank in blankdays" :key="blank">{{ " " }}</div>
+        <div
+          v-for="dayitem in daylist"
+          :key="dayitem"
+          :class="[dayitem[1], dayitem[2] == null ? '' : 'havetodo']"
+          :title="dayitem[2]"
+        >
+          {{ dayitem[0] }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import lunar from "./calendar";
 const days = ["日", "一", "二", "三", "四", "五", "六"]; // 星期数组
+const { Solar } = require("./lunar.js");
+
 var interval; // 定义全局定时器，用于清除定时器
 export default {
   setup() {},
   name: "Calendar",
   data() {
     return {
+      todoData: [],
+      lunar: "",
       weeks: ["日", "一", "二", "三", "四", "五", "六"],
       year: "",
       month: "",
       date: "",
       day: "",
-      gregorianFestival: "",
-      lunarMonthCn: "",
-      lunarDayCn: "",
-      lunarYearCn: "",
-      zodiacYear: "",
       daylist: {},
       blankdays: {},
       allday: "",
@@ -48,17 +53,15 @@ export default {
 
   methods: {
     updatedate: function () {
-      var lunardata = lunar.data();
+      var todos = JSON.parse(localStorage.getItem("todo"));
+      this.todos = todos;
       let icnow = new Date();
       this.year = icnow.getFullYear();
       this.month = icnow.getMonth() + 1;
       this.date = icnow.getDate();
       this.day = days[icnow.getDay()];
-      this.zodiacYear = lunardata.zodiacYear;
-      this.lunarYearCn = lunardata.lunarYearCn;
-      this.lunarDayCn = lunardata.lunarDayCn;
-      this.lunarMonthCn = lunardata.lunarMonthCn;
-      this.gregorianFestival = lunardata.gregorianFestival;
+      let solar = Solar.fromYmd(this.year, this.month, this.date);
+      this.lunar = solar.getLunar().toFullString().split(" ")[0];
       this.showday();
     },
     count: function () {
@@ -87,15 +90,29 @@ export default {
       var fistdate = new Date(year, month - 1, 1);
       var xinqi = fistdate.getDay();
       for (var i = 0; i < xinqi; i++) {
-        console.log(i, "day");
+        // console.log(i, "day");
         this.blankdays[i] = "i";
       }
-
       for (var j = 1; j <= allday; j++) {
+        var havetodo = null;
+        var _this = this;
+        this.todoData.forEach(function (value, index) {
+          index == index;
+          // console.log("value=", value, "index=", index);
+          var target = value.deadline.split("-");
+          if (
+            Number(target[0]) == _this.year &&
+            Number(target[1]) == _this.month &&
+            Number(target[2]) == j
+          ) {
+            havetodo = value.text;
+          }
+        });
+
         if (j == day) {
-          this.daylist[j] = [j, "dayitem-now"];
+          this.daylist[j] = [j, "dayitem-now", havetodo];
         } else {
-          this.daylist[j] = [j, "dayitem"];
+          this.daylist[j] = [j, "dayitem", havetodo];
         }
       }
     },
@@ -110,10 +127,13 @@ export default {
     },
   },
   created() {
+    var todos = JSON.parse(localStorage.getItem("todo"));
+    console.log(localStorage.getItem("todo"), "storage");
+    this.todoData = todos == null ? [] : todos;
     this.updatedate();
     interval = setInterval(() => {
       this.updatedate();
-    }, 1000 * 60 * 60);
+    }, 2000);
   },
   beforeDestroy() {
     clearInterval(interval);
@@ -132,9 +152,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(98, 22, 36);
+  border: 2px solid rgb(128, 0, 0) !important;
   border-radius: 5px;
-  color: white;
   cursor: pointer;
 }
 .dayitem {
@@ -145,6 +164,10 @@ export default {
 }
 .dayitem:hover {
   background-color: rgba(0, 0, 0, 0.082);
+  border-radius: 5px;
+}
+.havetodo {
+  border: 2px dotted rgb(75, 61, 0);
   border-radius: 5px;
 }
 </style>

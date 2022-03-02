@@ -1,4 +1,4 @@
-# wwpe
+# vuewidgets
 
 ## Project setup
 ```

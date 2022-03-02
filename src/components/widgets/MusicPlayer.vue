@@ -1,37 +1,42 @@
 <template>
-  <div class="music-player">
-    <div class="music-avator" @click="start" title="启动网易云音乐">
-      <img :src="songData.avatorSrc" height="153px" />
-    </div>
-    <div
-      style="
-        display: flex;
-        width: 50%;
-        justify-content: center;
-        flex-direction: column;
-        justify-content: space-between;
-      "
-    >
-      <div class="music-name">{{ songData.songName.split("-")[0] }}</div>
-      <div class="music-singer">{{ songData.songName.split("-")[1] }}</div>
-      <div class="play-control" style="display: flex; justify-content: center">
-        <div class="play-buttom" @click="previous">
-          <i class="bi bi-skip-start-fill"></i>
+  <div style="margin-top: 8px">
+    <v-row>
+      <v-card 
+          style="border-radius: 10px;"
+          outlined
+        ><v-img
+          :src="songData.avatorSrc"
+          width="164px"
+          :aspect-ratio="1"
+          @click="start"
+        ></v-img
+      ></v-card>
+
+      <v-col>
+        
+        <div style="height:100px;max-width:170px;">
+          <br/>
+          <h2 class="text-no-wrap text-center text-truncate" style="display:block;">
+            {{ songData.songName.split("-")[0] }}
+          </h2>
+          <div class="text-subtitle-2 text-center text-truncate" style="display:block">
+            {{ songData.songName.split("-")[1] }}
+          </div>
         </div>
-        <div class="play-buttom" @click="play">
-          <i v-show="songData.isplay" class="bi bi-pause-circle-fill"></i>
-          <i v-show="!songData.isplay" class="bi bi-pause-circle-fill"></i>
-        </div>
-        <div class="play-buttom" @click="next">
-          <i class="bi bi-skip-end-fill"></i>
-        </div>
-      </div>
-    </div>
+        <v-row>
+          &nbsp;
+          <v-btn text @click="previous" rounded><v-icon>mdi-skip-previous</v-icon></v-btn>
+          <v-btn text @click="play" rounded><v-icon>mdi-play</v-icon></v-btn>
+          <v-btn text @click="next" rounded><v-icon>mdi-skip-next</v-icon></v-btn>
+        </v-row>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-const bridge = chrome.webview.hostObjects.bridge;
+/* eslint-disable */
+import axios from "axios";
 
 export default {
   name: "MusicPlayer",
@@ -39,10 +44,9 @@ export default {
   data() {
     return {
       songData: {
-        avatorSrc:
-          "https://p2.music.126.net/rCoqZPEbSb2zaPw_An9QZQ==/109951163194902165.jpg?param=140y140",
+        avatorSrc: "",
         songSrc: "",
-        songName: "网易云音乐",
+        songName: "网易云音乐-歌名",
         isplay: "true",
       },
       songList: [],
@@ -50,12 +54,7 @@ export default {
   },
   methods: {
     runcmd(cmd) {
-      window.chrome.webview.postMessage(
-        JSON.stringify({
-          method: "runcmd",
-          cmd: cmd,
-        })
-      );
+      axios.post("api/runcmd", { cmd: cmd }).then((res) => {});
     },
     next() {
       this.runcmd("start scripts\\next.vbs");
@@ -74,14 +73,36 @@ export default {
       this.getName();
     },
     getName() {
-      var vm = this;
-      setTimeout(async () => {
-        vm.songData.songName = await bridge.GetName();
-      }, 300);
+      axios.get("api/getSongName").then(res=>{
+        this.songData.songName=res.data==""?"网易云音乐-歌名":res.data
+      })
     },
   },
   mounted() {
-    this.getName();
+    var _this = this;
+    setInterval(() => {
+      _this.getName();
+    }, 3000);
+  },
+  watch: {
+    songData: {
+      handler(newValue, oldValue) {
+        console.log(newValue, oldValue);
+        var data = {
+          name: this.songData.songName,
+        };
+        var _this = this;
+        axios({
+          url: "api/getAvator",
+          method: "post",
+          data: data,
+          timeout: 3000,
+        }).then((res) => {
+          _this.songData.avatorSrc = res.data;
+        });
+      },
+      deep: true,
+    },
   },
 };
 </script>
@@ -92,6 +113,9 @@ export default {
   font-size: 40px;
   cursor: pointer;
 }
+.play-buttom:hover {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.274);
+}
 .play-buttom:active {
   transform: scale(0.92);
 }
@@ -100,25 +124,27 @@ export default {
 }
 .music-avator {
   width: 48%;
-  height: 153px;
+  height: 150px;
   overflow: hidden;
+  background-color: rgba(128, 128, 128, 0.288);
 }
 .music-avator {
   border-radius: var(--icon-border-radius);
-  border: 1px solid #00000059;
+  border: 1px solid #0000001c;
 
   /* box-shadow: 0 0 5px #00000021; */
 }
 .music-name {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
   margin-top: 20px;
   overflow: hidden;
-  height: 40px;
+  max-height: 40px;
 }
 .music-singer {
   font-size: small;
   overflow: hidden;
+  height: 2rem;
 }
 </style>
 

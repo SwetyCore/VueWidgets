@@ -1,14 +1,17 @@
 <template>
-  <div id="clock">
-    <div id="time">
-      {{ time.substr(0, 5) }}
-      <div style="font-size: 20px; margin-top: 20px; color: #c92828">
-        {{ time.substr(5, 8) }}
+
+  <div class="widget-card" style="text-align:center">
+    <div id="clock">
+      <div id="time">
+        {{ time.substr(0, 5) }}
+        <div style="font-size: 20px; margin-top: 20px; color: #c92828">
+          {{ time.substr(5, 8) }}
+        </div>
       </div>
-    </div>
-    <div id="date">
-      {{ Nweek }}
-      <div>{{ Ndate }}</div>
+      <div id="date">
+        {{ Nweek }}
+        <div>{{ Ndate }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -40,9 +43,9 @@ export default {
     },
   },
   created() {
-    this.updatedate()
+    this.updatedate();
     interval = setInterval(() => {
-      this.updatedate()
+      this.updatedate();
     }, 1000);
   },
   computed: {
@@ -70,6 +73,6 @@ export default {
 #clock {
   width: 100%;
   height: 100%;
-  color: white;
+  color: rgb(27, 27, 27);
 }
 </style>

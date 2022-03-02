@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import '@/components/widgets/index.js'
 import vuetify from './plugins/vuetify'
-
+import '@/components/widgets/index.js'
 
 Vue.config.productionTip = false
 
