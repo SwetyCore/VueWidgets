@@ -131,8 +131,6 @@ export default {
 .music-avator {
   border-radius: var(--icon-border-radius);
   border: 1px solid #0000001c;
-
-  /* box-shadow: 0 0 5px #00000021; */
 }
 .music-name {
   font-size: 16px;

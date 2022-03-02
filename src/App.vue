@@ -152,6 +152,12 @@ export default {
   }),
   mounted() {
     // debugger
+    var t = window.devicePixelRatio; //
+    document.body.style.zoom = 1 / t; //
+    // var zoom = 1 / t;
+    var height = document.getElementById("app").clientHeight;
+    document.getElementById("app").style.height =
+      (height * t).toString() + "px";
     var layout = JSON.parse(localStorage.getItem("layout"));
     axios.get("data/layout.json").then((res) => {
       this.layout = layout == null ? res.data : layout;

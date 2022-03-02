@@ -38,6 +38,7 @@
                 v-model="selected"
                 :single-select="false"
                 show-select
+                mobile-breakpoint=10
               >
               </v-data-table>
               <v-card-actions>

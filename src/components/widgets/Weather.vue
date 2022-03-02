@@ -36,4 +36,8 @@ export default {
 .he-plugin-standard {
   transform: scale(0.8);
 }
+.wv-top-backdrop {
+  background-color: white !important;
+  overflow: hidden;
+}
 </style>

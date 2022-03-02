@@ -31,7 +31,11 @@
       <v-card>
         <v-card-title class="text-h5"> 编辑 </v-card-title>
         <v-card-text>
-          <v-data-table :headers="headers" :items="deadlines" class="">
+          <v-data-table
+            :headers="headers"
+            :items="deadlines"
+            mobile-breakpoint="10"
+          >
             <template v-slot:top>
               <v-toolbar flat color="white">
                 <v-toolbar-title>已有倒计时:</v-toolbar-title>
