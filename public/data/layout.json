@@ -88,5 +88,25 @@
         "enable":true,
         "color":"#222222",
         "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 2,
+        "i": "ClassSchedule",
+        "enable":true,
+        "color":"#222222",
+        "img":""
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 3,
+        "i": "album",
+        "enable":true,
+        "color":"#222222",
+        "img":""
     }
 ]

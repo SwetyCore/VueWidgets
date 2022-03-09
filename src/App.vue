@@ -27,7 +27,7 @@
         >
           <v-card
             height="100%"
-            @click.right="show($event, index)"
+            @click.right="show($event,index)"
             :color="item.color"
             :img="item.img"
             style="border-radius: 10px"
@@ -39,7 +39,7 @@
       </grid-layout>
 
       <!-- 卡片右键菜单 -->
-      <v-menu
+      <!-- <v-menu
         v-model="cardMenu"
         :position-x="x"
         :position-y="y"
@@ -53,7 +53,7 @@
             >
           </v-list-item>
         </v-list>
-      </v-menu>
+      </v-menu> -->
 
       <!-- 样式编辑 -->
       <v-dialog v-model="cardStyleDialog" max-width="390">
@@ -152,12 +152,12 @@ export default {
   }),
   mounted() {
     // debugger
-    var t = window.devicePixelRatio; //
-    document.body.style.zoom = 1 / t; //
-    // var zoom = 1 / t;
-    var height = document.getElementById("app").clientHeight;
-    document.getElementById("app").style.height =
-      (height * t).toString() + "px";
+    // var t = window.devicePixelRatio; //
+    // document.body.style.zoom = 1 / t; //
+    // // var zoom = 1 / t;
+    // var height = document.getElementById("app").clientHeight;
+    // document.getElementById("app").style.height =
+    //   (height * t).toString() + "px";
     var layout = JSON.parse(localStorage.getItem("layout"));
     axios.get("data/layout.json").then((res) => {
       this.layout = layout == null ? res.data : layout;
@@ -177,17 +177,19 @@ export default {
     reload() {
       window.location.reload();
     },
-    show(e, item) {
+    show(e,item) {
       e.preventDefault();
       this.selectedCard = item;
       this.cardMenu = false;
-      this.x = e.clientX;
-      this.y = e.clientY + document.getElementById("app").scrollTop;
+      // this.x = e.clientX;
+      // this.y = e.clientY + document.getElementById("app").scrollTop;
+      // this.y=e.pageY;
       this.$nextTick(() => {
         this.cardMenu = true;
 
         this.cardColor = this.activeWidgets[item].color;
         this.cardImg = this.activeWidgets[item].img;
+        this.cardStyleDialog = true;
       });
     },
     saveStyle() {
@@ -228,12 +230,12 @@ html {
   border-radius: 10px;
 }
 #app {
-  background-color: rgba(255, 255, 255, 0.178);
+  background-color: rgba(255, 255, 255, 0.363);
   overflow-x: hidden;
-  margin: 5px;
+  margin: 1px;
   border-radius: 10px;
   overflow-y: auto;
-  height: 99vh;
+  height: 100vh;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 5%), 0 2px 4px 1px rgb(0 0 0 / 9%);
 }
 
@@ -261,4 +263,6 @@ html {
   user-select: none;
   margin: 0px;
 }
+
+
 </style>

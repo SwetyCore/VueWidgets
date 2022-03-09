@@ -8,7 +8,7 @@
           :src="songData.avatorSrc"
           width="164px"
           :aspect-ratio="1"
-          @click="start"
+          @dbclick="start"
         ></v-img
       ></v-card>
 

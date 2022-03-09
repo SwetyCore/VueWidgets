@@ -1,10 +1,10 @@
 <template>
-  <div style="width: 100%; height: 100%;" v-if="true">
+  <div style="width: 100%; height: 100%" v-if="true">
     <div class="text-center">
       <v-menu :close-on-content-click="false" offset-x>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text  v-on="on" v-bind="attrs" class="drag-ignore">
-            <strong style="color:#363839">实时便笺</strong></v-btn
+          <v-btn text v-on="on" v-bind="attrs" class="drag-ignore">
+            <strong style="color: #363839">实时便笺</strong></v-btn
           >
         </template>
 
@@ -12,10 +12,7 @@
           <v-list dense>
             <v-list-item>
               <v-list-item-avatar>
-                <v-img
-                  src="imgs/paimon.png"
-                  alt="旅行者"
-                />
+                <v-img src="imgs/paimon.png" alt="旅行者" />
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -108,8 +105,13 @@
     </div>
     <!-- <div class="text-subtitle-2 text-right">UID:{{ uid }}</div> -->
 
-    <v-list width="100%" dense v-if="!loading" style="background-color: transparent;">
-      <v-list-item link  @click="start"  class="drag-ignore">
+    <v-list
+      width="100%"
+      dense
+      v-if="!loading"
+      style="background-color: transparent"
+    >
+      <v-list-item link @click="start" class="drag-ignore">
         <v-list-item-avatar>
           <img src="imgs/resin.png" alt="旅行者" />
         </v-list-item-avatar>
@@ -127,7 +129,7 @@
           >
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link  class="drag-ignore">
+      <v-list-item link class="drag-ignore">
         <v-list-item-avatar>
           <img src="imgs/dailyTask.png" alt="旅行者" />
         </v-list-item-avatar>
@@ -146,15 +148,17 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
-    <load-indicator :loading="loading"></load-indicator>
+    <div v-else>
+      <v-card-text> 未设置cookie或者cookie设置不正确！ </v-card-text>
+      <v-card-actions
+        ><v-btn text color="brown">如何获取cookie？</v-btn></v-card-actions
+      >
+    </div>
   </div>
 </template>
 <script>
 import axios from "axios";
-import LoadIndicator from "../LoadIndicator.vue";
 export default {
-  components: { LoadIndicator },
   name: "LiveResin",
   data() {
     return {
@@ -174,7 +178,9 @@ export default {
         url: "api/setResinCookie",
         method: "post",
         data: data,
-      }).then();
+      })
+        .then()
+        .catch();
     },
     setcfg() {
       this.show = false;
@@ -236,4 +242,11 @@ export default {
 };
 </script>
 <style>
+*{
+  font-family: "hywh";
+}
+@font-face {
+  font-family: "hywh";
+  src: url("/fonts/YS.TTF") format("truetype");
+}
 </style>

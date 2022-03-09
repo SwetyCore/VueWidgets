@@ -9,6 +9,7 @@
         <v-tab>个性化</v-tab>
         <v-tab>开发者选项</v-tab>
         <v-tab>关于</v-tab>
+
         <v-tab-item>
           <v-divider></v-divider>
           <v-container>
@@ -38,7 +39,7 @@
                 v-model="selected"
                 :single-select="false"
                 show-select
-                mobile-breakpoint=10
+                mobile-breakpoint="10"
               >
               </v-data-table>
               <v-card-actions>
@@ -48,6 +49,7 @@
             </v-card>
           </v-container>
         </v-tab-item>
+
         <v-tab-item>
           <v-divider></v-divider>
           <v-container>
@@ -68,6 +70,7 @@
             </v-alert></v-container
           >
         </v-tab-item>
+
         <v-tab-item>
           <v-divider></v-divider>
           <v-container
@@ -83,15 +86,22 @@
               outlined
               v-model="debugUrl"
               hint="如:http://localhost:8080"
-            ></v-text-field> </v-container
-        ></v-tab-item>
+            ></v-text-field>
+            <!-- <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" @click="loadrespack"
+                ><v-icon>mdi-package</v-icon>加载资源包</v-btn>
+              ></v-card-actions -->
+            </v-container
+          ></v-tab-item
+        >
 
         <v-tab-item>
           <v-divider></v-divider>
           <v-card>
             <v-card-title>MyWidget</v-card-title>
             <v-card-subtitle
-              >版本号{{ about.ver }} by SwetyCore</v-card-subtitle
+              >版本号{{ about.WidgetsVer }} by SwetyCore</v-card-subtitle
             >
             <v-card-actions>
               <a :href="about.projUrl" target="_blank"
@@ -125,7 +135,7 @@ export default {
   data() {
     return {
       about: {
-        ver: "2.0.0.1",
+        WidgetsVer: "2.0.0.3",
         projUrl: "https://github.com/SwetyCore/MyWidget",
       },
       debug: false,
@@ -167,6 +177,9 @@ export default {
       this.selected = layout == null ? res.data : layout;
       // this.layout = res.data;
     });
+    axios.get("ver.json").then((res) => {
+      this.about = res.data;
+    });
     axios
       .get("api/debug")
       .then((res) => {
@@ -194,6 +207,9 @@ export default {
       localStorage.setItem("layout", null);
 
       // this.selected = [];
+    },
+    loadrespack() {
+      axios.get("api/loadrespack").then().catch();
     },
   },
 };

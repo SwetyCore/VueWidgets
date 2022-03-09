@@ -1,5 +1,5 @@
 <template>
-  <div @click="taskmgr" class="drag-ignore">
+  <div @dblclick="taskmgr">
     <v-card-text v-if="!loading">
       <v-row>
         <v-col>

@@ -6,6 +6,7 @@
       hide-delimiter-background
       show-arrows-on-hover
       :hide-delimiters="false"
+      v-if="computedData.length != 0"
     >
       <v-carousel-item v-for="(slide, i) in computedData" :key="i">
         <v-tooltip bottom>
@@ -27,6 +28,15 @@
         <div class="ct_target">{{ slide.target }}</div>
       </v-carousel-item>
     </v-carousel>
+    <div v-else>
+      <v-card-subtitle> 倒计时 </v-card-subtitle>
+      <v-card-text>没有倒计时，双击新建倒计时。</v-card-text>
+      <v-card-actions>
+        <v-spacer> </v-spacer>
+        <v-btn @click="dialog = true" text color="purple">新建</v-btn>
+      </v-card-actions>
+    </div>
+
     <v-dialog v-model="dialog" persistent max-width="500">
       <v-card>
         <v-card-title class="text-h5"> 编辑 </v-card-title>
@@ -129,16 +139,7 @@ export default {
       },
       dialog: false,
       editdialog: false,
-      deadlines: [
-        {
-          name: "开学",
-          target: "2022-02-17",
-        },
-        {
-          name: "八重神子UP",
-          target: "2022-02-16",
-        },
-      ],
+      deadlines: [],
       computedData: [],
       interval: null,
     };

@@ -1,38 +1,33 @@
 <template>
+  <div style="width: 100%">
     <div>
       <div class="class-schedule-title">
-        <div style="">今天 / 星期{{ new Date().getDay()==0?"日":new Date().getDay() }} </div>
+        <div style="height:30px"><v-icon color="pink">mdi-book</v-icon>
+          今天 / 星期{{ new Date().getDay() == 0 ? "日" : new Date().getDay() }}
+        </div>
         <div>第{{ cweek }}周</div>
       </div>
-      <div
-        class="class-container drag-ignore"
-        v-for="cls in classes"
-        :key="cls"
-      >
-        <div style="color: gray; font-size: small">
-          {{ cls.start }}<br />
-          {{ cls.end }}
-        </div>
-        <div
-          :style="{ 'background-color': cls.color }"
-          class="cls-color-bar"
-        ></div>
-        <div style="color: gray; font-size: small; text-align: left">
-          <div
-            style="
-              color: black;
-              font-size: 17px;
-              font-weight: bold;
-              overflow: hidden;
-              height: 1em;
-            "
-          >
-            {{ cls.course }}
-          </div>
-          {{ cls.lesson }} | {{ cls.clsroom }} | {{ cls.teacher }}
-        </div>
-      </div>
+      <v-virtual-scroll height="280" :items="classes" item-height="52">
+        <template v-slot="{ item, index }">
+          <v-list-item :key="index" link  class="drag-ignore class-item" :style="JSON.parse(item.style)">
+            <div style="width:60px;font-size:small">
+              {{times[item.sections][0]}}<br/>
+              {{times[item.sections][1]}}
+            </div>
+            <v-list-item-content>
+              <v-list-item-title 
+                ><strong>{{ item.name }}</strong></v-list-item-title
+              >
+              <v-list-item-subtitle
+                >第{{ item.sections }}节 | {{ item.position }} |
+                {{ item.teacher }}</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-virtual-scroll>
     </div>
+  </div>
 </template>
 
 <script>
@@ -43,8 +38,7 @@ export default {
   data() {
     return {
       cweek: 0,
-      classes: [
-      ],
+      classes: [],
       times: {
         "1,2": ["08:00", "09:40"],
         "3,4": ["10:00", "11:40"],
@@ -52,26 +46,35 @@ export default {
         "7,8": ["16:00", "17:40"],
         "9,10": ["19:00", "20:40"],
       },
+      data: {},
+      startSemester: null,
     };
   },
   mounted() {
-    axios.get("my/gtcourse").then((res) => {
+    axios.get("data/table.json").then((res) => {
+      this.classes = [];
       var data = res.data.data;
-      var table = [];
-      data.forEach((element) => {
-        table.push({
-          start: this.times[element.sections][0],
-          end: this.times[element.sections][1],
-          course: element.name,
-          lesson: "第" + element.sections + "节",
-          clsroom: element.position,
-          teacher: element.teacher,
-          color: JSON.parse(element.style).color,
-        });
+      this.data = data;
+      this.startSemester = data.setting.startSemester;
+      this.cweek = this.cacWeek(
+        new Date().valueOf(),
+        parseInt(this.startSemester)
+      );
+      data.courses.forEach((element) => {
+        if (element.weeks.includes(this.cweek)) {
+          if (new Date().getDay() == element.day)
+            // element.start=times[element.sections][0]
+            this.classes.push(element);
+          console.log(element);
+        }
       });
-      this.classes = table;
-      this.cweek = res.data.week;
-    }).catch();
+    });
+  },
+  methods: {
+    cacWeek(a, b) {
+      var c = (a - b) / 60 / 60 / 24 / 7 / 1000;
+      return Math.ceil(c);
+    },
   },
 };
 </script>
@@ -79,8 +82,8 @@ export default {
 <style>
 .class-container {
   display: flex;
-  border-radius: var(--icon-border-radius);
-  background-color: white;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.075);
   margin: 10px;
   padding: 10px;
   align-items: center;
@@ -97,10 +100,14 @@ export default {
   font-weight: bold;
 }
 .cls-color-bar {
-  height: 30px;
+  height: 40px;
   width: 5px;
-  border-radius: var(--icon-border-radius);
+  border-radius: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  background-color: aqua;
+}
+.class-item{
+  border-radius: 10px;
 }
 </style>
