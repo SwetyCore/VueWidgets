@@ -3,5 +3,13 @@ module.exports = {
     'vuetify'
   ],
 
-  publicPath:"./"
+  publicPath: "./",
+  devServer: {
+    open: false,
+    overlay: {
+      warnings: false,
+      errors: false
+    }
+  },
+  lintOnSave: false,
 }

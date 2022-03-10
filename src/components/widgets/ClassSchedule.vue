@@ -2,7 +2,7 @@
   <div style="width: 100%">
     <div>
       <div class="class-schedule-title">
-        <div style="height:30px"><v-icon color="pink">mdi-book</v-icon>
+        <div style="height:30px"><v-icon color="green">mdi-book</v-icon>
           今天 / 星期{{ new Date().getDay() == 0 ? "日" : new Date().getDay() }}
         </div>
         <div>第{{ cweek }}周</div>

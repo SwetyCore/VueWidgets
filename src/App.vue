@@ -266,3 +266,12 @@ html {
 
 
 </style>
+<style>
+*{
+  font-family: "hywh";
+}
+@font-face {
+  font-family: "hywh";
+  src: url("/fonts/font.ttf") format("truetype");
+}
+</style>

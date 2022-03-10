@@ -69,6 +69,7 @@
               敬请期待
             </v-alert></v-container
           >
+          自定义字体:覆盖 WebRoot/fonts/font.ttf
         </v-tab-item>
 
         <v-tab-item>
@@ -92,8 +93,7 @@
               <v-btn color="primary" @click="loadrespack"
                 ><v-icon>mdi-package</v-icon>加载资源包</v-btn>
               ></v-card-actions -->
-            </v-container
-          ></v-tab-item
+          </v-container></v-tab-item
         >
 
         <v-tab-item>
@@ -101,7 +101,8 @@
           <v-card>
             <v-card-title>MyWidget</v-card-title>
             <v-card-subtitle
-              >版本号{{ about.WidgetsVer }} by SwetyCore</v-card-subtitle
+              >版本号 {{ about.WidgetsVer }}(view) {{ about.apiVer }}(api) by
+              SwetyCore</v-card-subtitle
             >
             <v-card-actions>
               <a :href="about.projUrl" target="_blank"
@@ -111,14 +112,22 @@
               >
             </v-card-actions>
             <v-card-text>
-              <strong>
-                <h3><v-icon>mdi-xml</v-icon>代码引用/参考:</h3></strong
+              <v-container>
+                <div style="white-space: pre-wrap">
+                  {{ about.description }}
+                </div></v-container
               >
-              <h4 v-for="reference in codeReferences" :key="reference.href">
-                <a :href="reference.href" target="_blank"
-                  >>{{ reference.title }}</a
+              <v-divider></v-divider>
+              <v-container
+                ><strong>
+                  <h3><v-icon>mdi-xml</v-icon>代码引用/参考:</h3></strong
                 >
-              </h4>
+                <h4 v-for="reference in codeReferences" :key="reference.href">
+                  <a :href="reference.href" target="_blank"
+                    >>{{ reference.title }}</a
+                  >
+                </h4></v-container
+              >
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -135,8 +144,9 @@ export default {
   data() {
     return {
       about: {
-        WidgetsVer: "2.0.0.3",
+        WidgetsVer: "",
         projUrl: "https://github.com/SwetyCore/MyWidget",
+        description: "",
       },
       debug: false,
       debugUrl: "http://localhost:8080",
@@ -178,8 +188,12 @@ export default {
       // this.layout = res.data;
     });
     axios.get("ver.json").then((res) => {
-      this.about = res.data;
+      apiHost.apiver.then((response) => {
+        res.data.apiVer = response;
+        this.about = res.data;
+      });
     });
+
     axios
       .get("api/debug")
       .then((res) => {

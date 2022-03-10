@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     runcmd(cmd) {
-      axios.post("api/runcmd", { cmd: cmd }).then(() => {});
+      apiHost.runcmd(cmd);
     },
     lockscreen() {
       this.runcmd("rundll32.exe user32.dll LockWorkStation");

@@ -149,7 +149,7 @@
       </v-list-item>
     </v-list>
     <div v-else>
-      <v-card-text> 未设置cookie或者cookie设置不正确！ </v-card-text>
+      <v-card-text> 未设置或不正确的cookie！ </v-card-text>
       <v-card-actions
         ><v-btn text color="brown">如何获取cookie？</v-btn></v-card-actions
       >
@@ -171,16 +171,7 @@ export default {
   },
   methods: {
     setcookie() {
-      var data = {
-        cookie: this.cookie,
-      };
-      axios({
-        url: "api/setResinCookie",
-        method: "post",
-        data: data,
-      })
-        .then()
-        .catch();
+      apiHost.setGeshinCookie(this.cookie)
     },
     setcfg() {
       this.show = false;
@@ -193,16 +184,15 @@ export default {
     },
     refresh() {
       var _this = this;
-      axios
-        .get("api/getResin")
+      apiHost.getResinData()
         .then((res) => {
-          console.log(res.data);
-          _this.resinData = res.data;
+          console.log(res);
+          _this.resinData = JSON.parse (res);
         })
         .catch();
     },
     runcmd(cmd) {
-      axios.post("api/runcmd", { cmd: cmd }).then(() => {});
+      apiHost.runcmd(cmd);
     },
     start() {
       this.runcmd("start scripts\\yuanshen.lnk");
@@ -241,12 +231,4 @@ export default {
   },
 };
 </script>
-<style>
-*{
-  font-family: "hywh";
-}
-@font-face {
-  font-family: "hywh";
-  src: url("/fonts/YS.TTF") format("truetype");
-}
-</style>
+

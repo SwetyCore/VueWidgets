@@ -55,19 +55,18 @@ export default {
   },
   methods: {
     runcmd(cmd) {
-      axios.post("api/runcmd", { cmd: cmd }).then(() => {});
+      apiHost.runcmd(cmd);
     },
     getData() {
-      axios
-        .get("api/performance")
+      apiHost.getPerformance()
         .then((res) => {
-          var data = res.data;
+          var data = JSON.parse(res)
           this.hostdata = data;
         })
         .catch();
     },
-    taskmgr(){
-      this.runcmd("taskmgr")
+    taskmgr() {
+      this.runcmd("taskmgr");
     },
     color(perc) {
       if (perc < 50) {
