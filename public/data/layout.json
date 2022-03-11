@@ -5,9 +5,9 @@
         "w": 2,
         "h": 1,
         "i": "music-player",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -15,9 +15,9 @@
         "w": 1,
         "h": 1,
         "i": "countdown",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -25,9 +25,9 @@
         "w": 2,
         "h": 2,
         "i": "todo",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -35,9 +35,9 @@
         "w": 2,
         "h": 1,
         "i": "weather",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -45,9 +45,9 @@
         "w": 1,
         "h": 1,
         "i": "clock",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -55,9 +55,9 @@
         "w": 2,
         "h": 1,
         "i": "calendar",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "white",
+        "img": ""
     },
     {
         "x": 0,
@@ -65,9 +65,9 @@
         "w": 1,
         "h": 1,
         "i": "live-resin",
-        "enable":true,
-        "color":"#f1ebe5",
-        "img":""
+        "enable": true,
+        "color": "#FFf1ebe5",
+        "img": ""
     },
     {
         "x": 0,
@@ -75,9 +75,9 @@
         "w": 1,
         "h": 1,
         "i": "power-control",
-        "enable":true,
-        "color":"white",
-        "img":""
+        "enable": true,
+        "color": "#FFFFF0FF",
+        "img": ""
     },
     {
         "x": 0,
@@ -85,9 +85,9 @@
         "w": 2,
         "h": 1,
         "i": "PerformanceMonitor",
-        "enable":true,
-        "color":"#222222",
-        "img":""
+        "enable": true,
+        "color": "#222222FF",
+        "img": ""
     },
     {
         "x": 0,
@@ -95,9 +95,9 @@
         "w": 2,
         "h": 2,
         "i": "ClassSchedule",
-        "enable":true,
-        "color":"#222222",
-        "img":""
+        "enable": true,
+        "color": "",
+        "img": ""
     },
     {
         "x": 0,
@@ -105,8 +105,9 @@
         "w": 2,
         "h": 3,
         "i": "album",
-        "enable":true,
-        "color":"#222222",
-        "img":""
+        "enable": true,
+        "color": "",
+        "img": "",
+        "resizable": true
     }
 ]

@@ -24,10 +24,11 @@
           :key="item.i"
           @moved="movedEvent"
           :dragIgnoreFrom="'.drag-ignore'"
+          :is-resizable="item.resizable"
         >
           <v-card
             height="100%"
-            @click.right="show($event,index)"
+            @click.right="show($event, index)"
             :color="item.color"
             :img="item.img"
             style="border-radius: 10px"
@@ -69,15 +70,12 @@
                 <v-col class="d-flex justify-center">
                   <v-color-picker v-model="cardColor"></v-color-picker>
                 </v-col>
-                <v-col cols="12" md="4">
-                  <v-sheet dark class="pa-4">
-                    <pre>{{ cardColor }}</pre>
-                  </v-sheet>
-                </v-col>
+                <v-divider></v-divider>
+                本地图片请放到图片文件夹,并加 https://pictures.sc/ 引用
                 <v-text-field
                   v-model="cardImg"
-                  label="
-              背景图片,支持网络地址"
+                  label="背景图片,支持网络地址"
+                  placeholder="https://pictures.sc/233.png"
                 ></v-text-field>
               </v-row>
             </v-container>
@@ -177,7 +175,7 @@ export default {
     reload() {
       window.location.reload();
     },
-    show(e,item) {
+    show(e, item) {
       e.preventDefault();
       this.selectedCard = item;
       this.cardMenu = false;
@@ -229,13 +227,15 @@ export default {
 html {
   border-radius: 10px;
 }
+body {
+  overflow-y: auto;
+  height: 100vh;
+}
 #app {
   background-color: rgba(255, 255, 255, 0.363);
   overflow-x: hidden;
   margin: 1px;
   border-radius: 10px;
-  overflow-y: auto;
-  height: 100vh;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 5%), 0 2px 4px 1px rgb(0 0 0 / 9%);
 }
 
@@ -263,11 +263,9 @@ html {
   user-select: none;
   margin: 0px;
 }
-
-
 </style>
 <style>
-*{
+* {
   font-family: "hywh";
 }
 @font-face {

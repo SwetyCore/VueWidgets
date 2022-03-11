@@ -2,12 +2,13 @@
   <div style="width: 100%">
     <div>
       <div class="class-schedule-title">
-        <div style="height:30px"><v-icon color="green">mdi-book</v-icon>
+        <div style="height:30px">
+          <!-- <v-icon color="white">mdi-book</v-icon> -->
           今天 / 星期{{ new Date().getDay() == 0 ? "日" : new Date().getDay() }}
         </div>
         <div>第{{ cweek }}周</div>
       </div>
-      <v-virtual-scroll height="280" :items="classes" item-height="52">
+      <v-virtual-scroll height="280" :items="classes" item-height="72">
         <template v-slot="{ item, index }">
           <v-list-item :key="index" link  class="drag-ignore class-item" :style="JSON.parse(item.style)">
             <div style="width:60px;font-size:small">
@@ -110,4 +111,5 @@ export default {
 .class-item{
   border-radius: 10px;
 }
+
 </style>

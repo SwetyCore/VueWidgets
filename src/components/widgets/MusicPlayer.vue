@@ -63,19 +63,19 @@ export default {
       apiHost.runcmd(cmd);
     },
     next() {
-      this.runcmd("start scripts\\next.vbs");
+      this.runcmd("start Resources\\next.vbs");
       this.getName();
     },
     previous() {
-      this.runcmd("start scripts\\previous.vbs");
+      this.runcmd("start Resources\\previous.vbs");
       this.getName();
     },
     play() {
-      this.runcmd("start scripts\\play.vbs");
+      this.runcmd("start Resources\\play.vbs");
       this.getName();
     },
     start() {
-      this.runcmd("start scripts\\music.lnk");
+      this.runcmd("start Resources\\music.lnk");
       this.getName();
     },
     getName() {

@@ -195,7 +195,7 @@ export default {
       apiHost.runcmd(cmd);
     },
     start() {
-      this.runcmd("start scripts\\yuanshen.lnk");
+      this.runcmd("start Resources\\yuanshen.lnk");
     },
   },
   mounted() {

@@ -7,7 +7,7 @@
 export default {
     name:"album",
     mounted(){
-
+      
     }
 }
 </script>
